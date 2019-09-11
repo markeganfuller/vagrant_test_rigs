@@ -34,12 +34,25 @@ Vagrant.configure("2") do |config|
     v.vm.network 'private_network', ip: '192.168.33.14'
   end
 
+  # Stretch with puppetserver test rig
+  config.vm.define 'stretch-puppetserver' do |v|
+    v.vm.box = 'debian/contrib-stretch64'
+    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/stretch_puppetserver.sh'
+    v.vm.hostname = 'stretch-puppetserver'
+    v.vm.network 'private_network', ip: '192.168.33.15'
+
+    v.vm.provider 'virtualbox' do |vbox|
+      vbox.memory = 1024
+    end
+  end
+
   # Stretch with extra disks
   config.vm.define 'stretch-disks' do |v|
     v.vm.box = 'debian/contrib-stretch64'
     v.vm.provision 'shell', path: 'scripts/deb_default.sh'
     v.vm.hostname = 'stretch-disks'
-    v.vm.network 'private_network', ip: '192.168.33.15'
+    v.vm.network 'private_network', ip: '192.168.33.16'
 
     v.vm.provider 'virtualbox' do |vbox|
       # Create 2 additional disks to be used in testing disk setup
@@ -62,7 +75,7 @@ Vagrant.configure("2") do |config|
     v.vm.provision 'shell', path: 'scripts/deb_default.sh'
     v.vm.provision 'shell', path: 'scripts/stretch_raid.sh'
     v.vm.hostname = 'stretch-raid'
-    v.vm.network 'private_network', ip: '192.168.33.16'
+    v.vm.network 'private_network', ip: '192.168.33.17'
 
     v.vm.provider 'virtualbox' do |vbox|
       # Create 9 additional disks to be used in testing RAID
