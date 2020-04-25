@@ -20,7 +20,7 @@ label-id: 0x6dcc49f5
 device: /dev/sdb
 unit: sectors
 
-/dev/sdb1 : start=        2048, size=     4192256, type=fd
+/dev/sdb1 : start=        2048, size=     8192, type=fd
 EOF
 done
 

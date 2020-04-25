@@ -97,8 +97,8 @@ Vagrant.configure("2") do |config|
     end
     v.vm.provider :libvirt do |libvirt|
       # Create 2 additional disks to be used in testing disk setup
-      libvirt.storage :file, :size => '2M'
-      libvirt.storage :file, :size => '2M'
+      libvirt.storage :file, :size => '5M'
+      libvirt.storage :file, :size => '5M'
     end
 
   end
@@ -129,7 +129,7 @@ Vagrant.configure("2") do |config|
     v.vm.provider :libvirt do |libvirt|
       9.times do
       # Create 9 additional disks to be used in testing RAID
-      libvirt.storage :file, :size => '2M'
+      libvirt.storage :file, :size => '5M'
       end
     end
   end
