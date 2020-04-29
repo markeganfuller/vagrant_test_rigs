@@ -1,0 +1,13 @@
+---
+# This file handles IP assignment, splitting the Vagrantfiles out is better but
+# means tracking IPs is harder so this file handles that:
+_network_: "192.168.33."
+stretch: 11
+stretch-docker: 12
+stretch-nginx: 13
+stretch-php: 14
+stretch-puppetserver: 15
+stretch-openvpn: 16
+stretch-disks: 17
+stretch-raid: 18
+openbsd: 19

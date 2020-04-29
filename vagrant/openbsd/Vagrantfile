@@ -1,0 +1,12 @@
+Vagrant.configure('2') do |config|
+  # Basic openbsd box
+  config.vm.define 'openbsd' do |v|
+    v.vm.box = 'generic/openbsd6'
+    v.vm.provision 'shell', path: 'scripts/openbsd_default.sh'
+    v.vm.hostname = 'openbsd'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+end
