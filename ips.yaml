@@ -11,3 +11,6 @@ stretch-openvpn: 16
 stretch-disks: 17
 stretch-raid: 18
 openbsd: 19
+# 20 Reserved for ppc64
+wheezy: 21
+wheezy-pdns: 22

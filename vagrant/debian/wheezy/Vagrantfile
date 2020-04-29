@@ -1,0 +1,24 @@
+Vagrant.configure('2') do |config|
+  # Basic wheezy box
+  config.vm.define 'wheezy' do |v|
+    v.vm.box = 'kronostechnologies/wheezy'
+    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
+    v.vm.hostname = 'wheezy'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+
+  # Wheezy with BPO pdns_recursor installed
+  config.vm.define 'wheezy-pdns' do |v|
+    v.vm.box = 'kronostechnologies/wheezy'
+    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/wheezy_pdns.sh'
+    v.vm.hostname = 'wheezy-pdns'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+end
