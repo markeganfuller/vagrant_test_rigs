@@ -14,3 +14,4 @@ openbsd: 19
 # 20 Reserved for ppc64
 wheezy: 21
 wheezy-pdns: 22
+arch: 23
