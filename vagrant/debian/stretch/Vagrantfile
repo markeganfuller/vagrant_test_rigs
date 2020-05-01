@@ -2,7 +2,7 @@ Vagrant.configure('2') do |config|
   # Basic stretch box
   config.vm.define 'stretch' do |v|
     v.vm.box = 'debian/stretch64'
-    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
     v.vm.hostname = 'stretch'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
@@ -13,8 +13,8 @@ Vagrant.configure('2') do |config|
   # Stretch with docker installed
   config.vm.define 'stretch-docker' do |v|
     v.vm.box = 'debian/stretch64'
-    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
-    v.vm.provision 'shell', path: 'scripts/stretch_docker.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/stretch/stretch_docker.sh'
     v.vm.hostname = 'stretch-docker'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
@@ -25,8 +25,8 @@ Vagrant.configure('2') do |config|
   # Stretch with nginx test rig
   config.vm.define 'stretch-nginx' do |v|
     v.vm.box = 'debian/stretch64'
-    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
-    v.vm.provision 'shell', path: 'scripts/stretch_nginx.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/stretch/stretch_nginx.sh'
     v.vm.hostname = 'stretch-nginx'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
@@ -37,8 +37,8 @@ Vagrant.configure('2') do |config|
   # Stretch with php test rig
   config.vm.define 'stretch-php' do |v|
     v.vm.box = 'debian/stretch64'
-    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
-    v.vm.provision 'shell', path: 'scripts/stretch_php.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/stretch/stretch_php.sh'
     v.vm.hostname = 'stretch-php'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
@@ -49,8 +49,8 @@ Vagrant.configure('2') do |config|
   # Stretch with puppetserver test rig
   config.vm.define 'stretch-puppetserver' do |v|
     v.vm.box = 'debian/stretch64'
-    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
-    v.vm.provision 'shell', path: 'scripts/stretch_puppetserver.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/stretch/stretch_puppetserver.sh'
     v.vm.hostname = 'stretch-puppetserver'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
@@ -69,8 +69,8 @@ Vagrant.configure('2') do |config|
   # Stretch with openvpn test rig
   config.vm.define 'stretch-openvpn' do |v|
     v.vm.box = 'debian/stretch64'
-    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
-    v.vm.provision 'shell', path: 'scripts/stretch_openvpn.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/stretch/stretch_openvpn.sh'
     v.vm.hostname = 'stretch-openvpn'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
@@ -89,7 +89,7 @@ Vagrant.configure('2') do |config|
   # Stretch with extra disks
   config.vm.define 'stretch-disks' do |v|
     v.vm.box = 'debian/stretch64'
-    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
     v.vm.hostname = 'stretch-disks'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
@@ -119,8 +119,8 @@ Vagrant.configure('2') do |config|
   # Stretch with a software raid setup
   config.vm.define 'stretch-raid' do |v|
     v.vm.box = 'debian/stretch64'
-    v.vm.provision 'shell', path: 'scripts/deb_default.sh'
-    v.vm.provision 'shell', path: 'scripts/stretch_raid.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/stretch/stretch_raid.sh'
     v.vm.hostname = 'stretch-raid'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
