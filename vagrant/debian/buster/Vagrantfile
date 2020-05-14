@@ -1,0 +1,12 @@
+Vagrant.configure('2') do |config|
+  # Basic buster box
+  config.vm.define 'buster' do |v|
+    v.vm.box = 'debian/buster64'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.hostname = 'buster'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+end

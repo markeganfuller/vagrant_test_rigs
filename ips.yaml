@@ -15,3 +15,5 @@ openbsd: 19
 wheezy: 21
 wheezy-pdns: 22
 arch: 23
+stretch-tinydns: 24
+buster: 25
