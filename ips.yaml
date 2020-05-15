@@ -17,3 +17,4 @@ wheezy-pdns: 22
 arch: 23
 stretch-tinydns: 24
 buster: 25
+windows10: 26
