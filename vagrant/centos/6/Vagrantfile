@@ -1,0 +1,11 @@
+Vagrant.configure('2') do |config|
+  # Basic centos6 box
+  config.vm.define 'centos6' do |v|
+    v.vm.box = 'centos/6'
+    v.vm.hostname = 'centos6'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+end

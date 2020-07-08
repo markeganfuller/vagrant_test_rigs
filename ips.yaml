@@ -19,3 +19,6 @@ stretch-tinydns: 24
 buster: 25
 windows10: 26
 arch-openconnect: 27
+centos6: 28
+centos7: 29
+centos8: 30
