@@ -1,0 +1,11 @@
+Vagrant.configure('2') do |config|
+  # Basic centos5 box
+  config.vm.define 'centos5' do |v|
+    v.vm.box = 'artmello/centos5'
+    v.vm.hostname = 'centos5'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+end
