@@ -23,3 +23,5 @@ centos5: 28
 centos6: 29
 centos7: 30
 centos8: 31
+alpine: 32
+wheezy-asterisk: 33

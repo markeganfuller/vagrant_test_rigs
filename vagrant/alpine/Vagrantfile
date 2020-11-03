@@ -1,0 +1,12 @@
+Vagrant.configure('2') do |config|
+  # Basic alpine box
+  config.vm.define 'alpine' do |v|
+    v.vm.box = 'alpine-linux/alpine-x86_64'
+    v.vm.provision 'shell', path: 'scripts/alpine/alpine_default.sh'
+    v.vm.hostname = 'alpine'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+end

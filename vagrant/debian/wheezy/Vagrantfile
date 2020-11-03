@@ -21,4 +21,16 @@ Vagrant.configure('2') do |config|
                  libvirt__dhcp_enabled: false
     v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
   end
+
+  # Wheezy with asterisk 1.8.13.1~dfsg1-3+deb7u8
+  config.vm.define 'wheezy-asterisk' do |v|
+    v.vm.box = 'kronostechnologies/wheezy'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/wheezy/wheezy_asterisk.sh'
+    v.vm.hostname = 'wheezy-asterisk'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
 end
