@@ -1,7 +1,10 @@
 ---
 # This file handles IP assignment, splitting the Vagrantfiles out is better but
-# means tracking IPs is harder so this file handles that:
+# means tracking IPs is harder so this file handles that.
+
+# This is the network addresses are on
 _network_: "192.168.33."
+
 stretch: 11
 stretch-docker: 12
 stretch-nginx: 13
@@ -25,3 +28,5 @@ centos7: 30
 centos8: 31
 alpine: 32
 wheezy-asterisk: 33
+stretch-drbd1: 34
+stretch-drbd2: 35

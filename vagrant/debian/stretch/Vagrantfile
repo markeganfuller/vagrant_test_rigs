@@ -1,6 +1,6 @@
 Vagrant.configure('2') do |config|
   # Basic stretch box
-  config.vm.define 'stretch' do |v|
+  config.vm.define 'stretch', primary: true do |v|
     v.vm.box = 'debian/stretch64'
     v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
     v.vm.hostname = 'stretch'
@@ -119,7 +119,7 @@ Vagrant.configure('2') do |config|
     v.vm.provider 'virtualbox' do |vbox|
       # Create 2 additional disks to be used in testing disk setup
       (0...2).each do |d|
-        disk_file = "disk#{d}.vdi"
+        disk_file = "#{v.vm.hostname}_disk#{d}.vdi"
         unless File.exist?(disk_file)
           vbox.customize ['createhd', '--filename', disk_file, '--size', 5120]
         end
@@ -150,7 +150,7 @@ Vagrant.configure('2') do |config|
     v.vm.provider 'virtualbox' do |vbox|
       # Create 9 additional disks to be used in testing RAID
       (0...9).each do |d|
-        disk_file = "disk#{d}.vdi"
+        disk_file = "#{v.vm.hostname}_disk#{d}.vdi"
         unless File.exist?(disk_file)
           vbox.customize ['createhd', '--filename', disk_file, '--size', 5120]
         end
@@ -166,6 +166,64 @@ Vagrant.configure('2') do |config|
       # Create 9 additional disks to be used in testing RAID
       libvirt.storage :file, :size => '5M'
       end
+    end
+  end
+
+  # Stretch with drbd host one
+  config.vm.define 'stretch-drbd1' do |v|
+    v.vm.box = 'debian/stretch64'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_drbd.sh'
+    v.vm.hostname = 'stretch-drbd1'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+
+    v.vm.provider 'virtualbox' do |vbox|
+      # Create an additional disk to be used for DRBD
+      disk_file = "#{v.vm.hostname}_disk1.vdi"
+      unless File.exist?(disk_file)
+        vbox.customize ['createhd', '--filename', disk_file, '--size', 5120]
+      end
+      # Note we connect to port 1 as port 0 has the root disk
+      vbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller',
+                      '--port', 1, '--device', 0, '--type', 'hdd',
+                      '--medium', disk_file]
+    end
+    v.vm.provider :libvirt do |libvirt|
+      # Create 2 additional disks to be used in testing disk setup
+      libvirt.storage :file, :size => '5M'
+      libvirt.storage :file, :size => '5M'
+    end
+  end
+
+  # Stretch with drbd host two
+  config.vm.define 'stretch-drbd2' do |v|
+    v.vm.box = 'debian/stretch64'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_drbd.sh'
+    v.vm.hostname = 'stretch-drbd2'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+
+    v.vm.provider 'virtualbox' do |vbox|
+      # Create an additional disk to be used for DRBD
+      disk_file = "#{v.vm.hostname}_disk1.vdi"
+      unless File.exist?(disk_file)
+        vbox.customize ['createhd', '--filename', disk_file, '--size', 5120]
+      end
+      # Note we connect to port 1 as port 0 has the root disk
+      vbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller',
+                      '--port', 1, '--device', 0, '--type', 'hdd',
+                      '--medium', disk_file]
+    end
+    v.vm.provider :libvirt do |libvirt|
+      # Create 2 additional disks to be used in testing disk setup
+      libvirt.storage :file, :size => '5M'
+      libvirt.storage :file, :size => '5M'
     end
   end
 end
