@@ -1,5 +1,12 @@
 #!/bin/bash
 
+function mount_disks(){
+    for i in 1 2; do
+        mkdir "/mnt/${i}"
+        mount "/dev/drbd${i}" "/mnt/${i}"
+    done
+}
+
 apt-get install -y drbd8-utils
 
 cat <<EOF > /etc/drbd.d/test.res
@@ -22,19 +29,47 @@ resource test {
 }
 EOF
 
+cat <<EOF > /etc/drbd.d/test2.res
+resource test2 {
+  device /dev/drbd2;
+  syncer {
+    rate 400M;
+    verify-alg sha1;
+  }
+  on stretch-drbd1 {
+    disk /dev/vdc;
+    address 192.168.33.34:7790;
+    meta-disk internal;
+  }
+  on stretch-drbd2 {
+    disk /dev/vdc;
+    address 192.168.33.35:7790;
+    meta-disk internal;
+  }
+}
+EOF
+
 drbdadm create-md test
+drbdadm create-md test2
 drbdadm up test
+drbdadm up test2
 
 
-# If we're 1 make us primary
 if [ "$HOSTNAME" == "stretch-drbd1" ]; then
+    # If we're 1 make us primary and setup the FS / test data
     # Overwrite for initialisation
     drbdadm -- --overwrite-data-of-peer primary test
+    drbdadm -- --overwrite-data-of-peer primary test2
     mkfs.ext4 /dev/drbd1
-    mount /dev/drbd1 /mnt
-    echo "Test data" > /mnt/test_data
+    mkfs.ext4 /dev/drbd2
+
+    mount_disks
+
+    echo "Test data 1" > /mnt/test_data_1
+    echo "Test data 2" > /mnt/test_data_2
 else
-    mount /dev/drbd1 /mnt
+    # If we're on 2 just mount the disks
+    mount_disks
 fi
 
 

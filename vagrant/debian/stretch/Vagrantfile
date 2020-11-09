@@ -181,18 +181,20 @@ Vagrant.configure('2') do |config|
     v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
 
     v.vm.provider 'virtualbox' do |vbox|
-      # Create an additional disk to be used for DRBD
-      disk_file = "#{v.vm.hostname}_disk1.vdi"
-      unless File.exist?(disk_file)
-        vbox.customize ['createhd', '--filename', disk_file, '--size', 5120]
+      # Create 2 additional disks for DRBD
+      (0...2).each do |d|
+        disk_file = "#{v.vm.hostname}_disk#{d}.vdi"
+        unless File.exist?(disk_file)
+          vbox.customize ['createhd', '--filename', disk_file, '--size', 5120]
+        end
+        # Note we connect to a port +1 as port 0 has the root disk
+        vbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller',
+                        '--port', d + 1, '--device', 0, '--type', 'hdd',
+                        '--medium', disk_file]
       end
-      # Note we connect to port 1 as port 0 has the root disk
-      vbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller',
-                      '--port', 1, '--device', 0, '--type', 'hdd',
-                      '--medium', disk_file]
     end
     v.vm.provider :libvirt do |libvirt|
-      # Create 2 additional disks to be used in testing disk setup
+      # Create 2 additional disks for DRBD
       libvirt.storage :file, :size => '5M'
       libvirt.storage :file, :size => '5M'
     end
@@ -210,18 +212,20 @@ Vagrant.configure('2') do |config|
     v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
 
     v.vm.provider 'virtualbox' do |vbox|
-      # Create an additional disk to be used for DRBD
-      disk_file = "#{v.vm.hostname}_disk1.vdi"
-      unless File.exist?(disk_file)
-        vbox.customize ['createhd', '--filename', disk_file, '--size', 5120]
+      # Create 2 additional disks for DRBD
+      (0...2).each do |d|
+        disk_file = "#{v.vm.hostname}_disk#{d}.vdi"
+        unless File.exist?(disk_file)
+          vbox.customize ['createhd', '--filename', disk_file, '--size', 5120]
+        end
+        # Note we connect to a port +1 as port 0 has the root disk
+        vbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller',
+                        '--port', d + 1, '--device', 0, '--type', 'hdd',
+                        '--medium', disk_file]
       end
-      # Note we connect to port 1 as port 0 has the root disk
-      vbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller',
-                      '--port', 1, '--device', 0, '--type', 'hdd',
-                      '--medium', disk_file]
     end
     v.vm.provider :libvirt do |libvirt|
-      # Create 2 additional disks to be used in testing disk setup
+      # Create 2 additional disks for DRBD
       libvirt.storage :file, :size => '5M'
       libvirt.storage :file, :size => '5M'
     end
