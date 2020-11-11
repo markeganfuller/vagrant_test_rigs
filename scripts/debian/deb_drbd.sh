@@ -3,8 +3,9 @@
 function mount_disks(){
     for i in 1 2; do
         mkdir "/mnt/${i}"
-        mount "/dev/drbd${i}" "/mnt/${i}"
+        echo "/dev/drbd${i} /mnt/${i} ext4 defaults 0 0" >> /etc/fstab
     done
+    mount -a
 }
 
 apt-get install -y drbd8-utils
