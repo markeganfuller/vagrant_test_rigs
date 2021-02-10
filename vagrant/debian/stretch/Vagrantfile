@@ -50,7 +50,8 @@ Vagrant.configure('2') do |config|
   config.vm.define 'stretch-puppetserver' do |v|
     v.vm.box = 'debian/stretch64'
     v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
-    v.vm.provision 'shell', path: 'scripts/debian/stretch/stretch_puppetserver.sh'
+    v.vm.provision 'shell',
+                   path: 'scripts/debian/stretch/stretch_puppetserver.sh'
     v.vm.hostname = 'stretch-puppetserver'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
@@ -131,8 +132,8 @@ Vagrant.configure('2') do |config|
     end
     v.vm.provider :libvirt do |libvirt|
       # Create 2 additional disks to be used in testing disk setup
-      libvirt.storage :file, :size => '5M'
-      libvirt.storage :file, :size => '5M'
+      libvirt.storage :file, size: '5M'
+      libvirt.storage :file, size: '5M'
     end
   end
 
@@ -163,8 +164,8 @@ Vagrant.configure('2') do |config|
 
     v.vm.provider :libvirt do |libvirt|
       9.times do
-      # Create 9 additional disks to be used in testing RAID
-      libvirt.storage :file, :size => '5M'
+        # Create 9 additional disks to be used in testing RAID
+        libvirt.storage :file, size: '5M'
       end
     end
   end
@@ -195,8 +196,8 @@ Vagrant.configure('2') do |config|
     end
     v.vm.provider :libvirt do |libvirt|
       # Create 2 additional disks for DRBD
-      libvirt.storage :file, :size => '5M'
-      libvirt.storage :file, :size => '5M'
+      libvirt.storage :file, size: '5M'
+      libvirt.storage :file, size: '5M'
     end
   end
 
@@ -226,8 +227,42 @@ Vagrant.configure('2') do |config|
     end
     v.vm.provider :libvirt do |libvirt|
       # Create 2 additional disks for DRBD
-      libvirt.storage :file, :size => '5M'
-      libvirt.storage :file, :size => '5M'
+      libvirt.storage :file, size: '5M'
+      libvirt.storage :file, size: '5M'
     end
+  end
+
+  # Stretch with gvpe host one
+  config.vm.define 'stretch-gvpe1' do |v|
+    v.vm.box = 'debian/stretch64'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell',
+                   path: 'scripts/debian/deb_gvpe.sh',
+                   args: [
+                     IP_ADDRESSES['stretch-gvpe1'],
+                     IP_ADDRESSES['stretch-gvpe2']
+                   ]
+    v.vm.hostname = 'stretch-gvpe1'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+
+  # Stretch with gvpe host two
+  config.vm.define 'stretch-gvpe2' do |v|
+    v.vm.box = 'debian/stretch64'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell',
+                   path: 'scripts/debian/deb_gvpe.sh',
+                   args: [
+                     IP_ADDRESSES['stretch-gvpe1'],
+                     IP_ADDRESSES['stretch-gvpe2']
+                   ]
+    v.vm.hostname = 'stretch-gvpe2'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
   end
 end

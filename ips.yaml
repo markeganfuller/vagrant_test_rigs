@@ -30,3 +30,5 @@ alpine: 32
 wheezy-asterisk: 33
 stretch-drbd1: 34
 stretch-drbd2: 35
+stretch-gvpe1: 36
+stretch-gvpe2: 37
