@@ -12,8 +12,43 @@ Vagrant.configure('2') do |config|
   # centos7 with onapp
   config.vm.define 'centos7-onapp' do |v|
     v.vm.box = 'centos/7'
+    v.vm.provision 'shell', path: 'scripts/rhel/rhel_default.sh'
     v.vm.provision 'shell', path: 'scripts/rhel/rhel_onapp.sh'
     v.vm.hostname = 'centos7-onapp'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+  # centos7 with powerdns 1
+  config.vm.define 'centos7-pdns1' do |v|
+    v.vm.box = 'centos/7'
+    v.vm.provision 'shell', path: 'scripts/rhel/rhel_default.sh'
+    v.vm.provision 'shell',
+                   path: 'scripts/rhel/rhel_pdns.sh',
+                   args: [
+                     IP_ADDRESSES['centos7-pdns1'],
+                     IP_ADDRESSES['centos7-pdns2']
+                   ]
+
+    v.vm.hostname = 'centos7-pdns1'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+  end
+  # centos7 with powerdns 2
+  config.vm.define 'centos7-pdns2' do |v|
+    v.vm.box = 'centos/7'
+    v.vm.provision 'shell', path: 'scripts/rhel/rhel_default.sh'
+    v.vm.provision 'shell',
+                   path: 'scripts/rhel/rhel_pdns.sh',
+                   args: [
+                     IP_ADDRESSES['centos7-pdns1'],
+                     IP_ADDRESSES['centos7-pdns2']
+                   ]
+
+    v.vm.hostname = 'centos7-pdns2'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
