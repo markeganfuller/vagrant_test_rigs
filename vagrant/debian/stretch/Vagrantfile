@@ -7,7 +7,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
 
   # Stretch with docker installed
@@ -19,7 +19,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
 
   # Stretch with nginx test rig
@@ -31,7 +31,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
 
   # Stretch with php test rig
@@ -43,7 +43,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
 
   # Stretch with puppetserver test rig
@@ -56,7 +56,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
 
     v.vm.provider 'virtualbox' do |vbox|
       vbox.memory = 1024
@@ -76,7 +76,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
 
     v.vm.provider 'virtualbox' do |vbox|
       vbox.memory = 1024
@@ -96,7 +96,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
 
     v.vm.provider 'virtualbox' do |vbox|
       vbox.memory = 1024
@@ -115,7 +115,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
 
     v.vm.provider 'virtualbox' do |vbox|
       # Create 2 additional disks to be used in testing disk setup
@@ -146,7 +146,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
 
     v.vm.provider 'virtualbox' do |vbox|
       # Create 9 additional disks to be used in testing RAID
@@ -179,7 +179,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
 
     v.vm.provider 'virtualbox' do |vbox|
       # Create 2 additional disks for DRBD
@@ -210,7 +210,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
 
     v.vm.provider 'virtualbox' do |vbox|
       # Create 2 additional disks for DRBD
@@ -246,7 +246,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
 
   # Stretch with gvpe host two
@@ -263,6 +263,6 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
 end

@@ -7,7 +7,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
 
   # Wheezy with BPO pdns_recursor installed
@@ -19,7 +19,7 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
 
   # Wheezy with asterisk 1.8.13.1~dfsg1-3+deb7u8
@@ -31,6 +31,6 @@ Vagrant.configure('2') do |config|
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 3
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
 end
