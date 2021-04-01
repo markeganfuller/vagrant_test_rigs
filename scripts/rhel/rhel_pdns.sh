@@ -3,7 +3,9 @@
 NODE_1_IP=$1
 NODE_2_IP=$2
 
-yum install -y pdns pdns-backend-sqlite
+yum install -y pdns pdns-backend-sqlite bind-utils
+
+mkdir -p  /var/lib/powerdns/
 
 echo "PRAGMA foreign_keys = 1;
 
@@ -96,57 +98,42 @@ CREATE TABLE tsigkeys (
 );
 
 CREATE UNIQUE INDEX namealgoindex ON tsigkeys(name, algorithm);
-" | sqlite3 /etc/pdns/pdns.sqlite
+" | sqlite3 /var/lib/powerdns/pdns.sqlite
 
 
 # Use sqlite backend
 sed -i 's/^launch=.*$/launch=gsqlite3/' /etc/pdns/pdns.conf
-echo 'gsqlite3-database=/etc/pdns/pdns.sqlite' >> /etc/pdns/pdns.conf
-
-
+echo 'gsqlite3-database=/var/lib/powerdns/pdns.sqlite' >> /etc/pdns/pdns.conf
 
 if [[ $HOSTNAME =~ .*pdns1 ]]; then
     # PDNS1
-    # This runs an authorative and a recursor
-    yum install -y pdns-recursor dnsdist
-
-    # Authorative - listening on 127.0.0.1:53
-    echo 'local-address=127.0.0.1' >> /etc/pdns/pdns.conf
-    echo 'local-port=5300' >> /etc/pdns/pdns.conf
-
-    # Recursor - listening on 0.0.0.0:53
-    echo 'local-address=0.0.0.0' >> /etc/pdns-recursor/pdns-recursor.conf
-    echo "forward-zones+=sub.example.com=${NODE_2_IP}" >> /etc/pdns-recursor/recursor.conf
-
-    cat <<EOF > /etc/pdns-recursor/mask.lua
-    pdnslog("Mask script starting", pdns.loglevels.Warning)
-
-    function nxdomain(dq)
-
-
-    end
+    # Authorative - listening on 0.0.0.0:53
+    cat <<EOF >> /etc/pdns/pdns.conf
+local-address=0.0.0.0
+master=yes
+allow-axfr-ips=${NODE_2_IP}
 EOF
-
-
+    chown pdns:pdns -R /var/lib/powerdns/
     systemctl start pdns
-    systemctl start pdns-recursor
 
     # Test data
     pdnsutil create-zone sub.example.com
+    pdnsutil set-kind sub.example.com master
     pdnsutil add-record sub.example.com ns1 A 3600 "${NODE_1_IP}"
     pdnsutil add-record sub.example.com @ NS ns1.sub.example.com
+    pdnsutil add-record sub.example.com ns2 A 3600 "${NODE_2_IP}"
+    pdnsutil add-record sub.example.com @ NS ns2.sub.example.com
     pdnsutil add-record sub.example.com one A 3600 192.0.2.1
-    pdnsutil add-record sub.example.com both A 3600 192.0.2.11
-
+    pdnsutil increase-serial sub.example.com
 else
     # PDNS2
     # This just runs an authorative on 127.0.0.1:53
+    cat <<EOF >> /etc/pdns/pdns.conf
+slave=yes
+slave-cycle-interval=60
+EOF
+    sqlite3 /var/lib/powerdns/pdns.sqlite "INSERT INTO supermasters VALUES ('${NODE_1_IP}', 'ns2.sub.example.com', 'admin');"
+    chown pdns:pdns -R /var/lib/powerdns/
     systemctl start pdns
-
-    # Test data
-    pdnsutil create-zone sub.example.com
-    pdnsutil add-record sub.example.com ns2 A 3600 "${NODE_2_IP}"
-    pdnsutil add-record sub.example.com @ NS ns2.sub.example.com
-    pdnsutil add-record sub.example.com two A 3600 192.0.2.2
-    pdnsutil add-record sub.example.com both A 3600 192.0.2.22
 fi
+
