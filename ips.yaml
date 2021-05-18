@@ -36,3 +36,4 @@ centos7-pdns1: 38
 centos7-pdns2: 39
 centos7-pyinstaller: 40
 ubuntu1604: 41
+almalinux8: 42
