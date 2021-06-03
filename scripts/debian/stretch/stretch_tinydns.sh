@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apt-get update
-apt-get install -y make gcc daemontools ucspi-tcp
+apt-get install -y make gcc daemontools ucspi-tcp dnsutils
 
 # Build Tinydns
 wget http://cr.yp.to/djbdns/djbdns-1.05.tar.gz
@@ -20,4 +20,27 @@ useradd -U -M -r -d /etc/tinydns tinydns
 
 tinydns-conf tinydns tinydns /etc/tinydns 127.0.0.1
 
-# TODO Config of service.
+cat > /etc/systemd/system/tinydns.service <<EOF
+[Unit]
+After=local-fs.target network.target
+
+[Service]
+User=root
+WorkingDirectory=/etc/tinydns
+Environment="IP=127.0.01"
+Environment="ROOT=/etc/tinydns/root"
+Environment="UID=root"
+Environment="GROUP=root"
+ExecStart=/etc/tinydns/run
+KillMode=process
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/tinydns/root/data <<EOF
+.example.com:127.0.0.1::300
+=google.example.com:8.8.8.8:300
+EOF
+# TODO Config axfrdns
