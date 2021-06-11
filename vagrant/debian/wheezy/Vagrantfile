@@ -1,7 +1,7 @@
 Vagrant.configure('2') do |config|
   # Basic wheezy box
   config.vm.define 'wheezy' do |v|
-    v.vm.box = 'kronostechnologies/wheezy'
+    v.vm.box = 'markeganfuller/debian-wheezy'
     v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
     v.vm.hostname = 'wheezy'
     v.vm.network 'private_network',
@@ -12,7 +12,7 @@ Vagrant.configure('2') do |config|
 
   # Wheezy with BPO pdns_recursor installed
   config.vm.define 'wheezy-pdns' do |v|
-    v.vm.box = 'kronostechnologies/wheezy'
+    v.vm.box = 'markeganfuller/debian-wheezy'
     v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
     v.vm.provision 'shell', path: 'scripts/debian/wheezy/wheezy_pdns.sh'
     v.vm.hostname = 'wheezy-pdns'
@@ -24,7 +24,7 @@ Vagrant.configure('2') do |config|
 
   # Wheezy with asterisk 1.8.13.1~dfsg1-3+deb7u8
   config.vm.define 'wheezy-asterisk' do |v|
-    v.vm.box = 'kronostechnologies/wheezy'
+    v.vm.box = 'markeganfuller/debian-wheezy'
     v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
     v.vm.provision 'shell', path: 'scripts/debian/wheezy/wheezy_asterisk.sh'
     v.vm.hostname = 'wheezy-asterisk'
