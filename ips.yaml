@@ -38,3 +38,4 @@ centos7-pyinstaller: 40
 ubuntu1604: 41
 almalinux8: 42
 ubuntu2004: 43
+buster-cryptvolume: 44

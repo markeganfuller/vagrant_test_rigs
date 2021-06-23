@@ -3,7 +3,6 @@
 # Install linux software RAID
 apt-get install mdadm -y
 
-# Partition disks
 if lsblk | grep sda -q; then
     disk_name=sd
 elif lsblk | grep vda -q; then
@@ -13,6 +12,7 @@ else
     exit 1
 fi
 
+# Partition disks
 for disk in b c d e f g h i j; do
     sfdisk /dev/${disk_name}${disk} << EOF
 label: dos

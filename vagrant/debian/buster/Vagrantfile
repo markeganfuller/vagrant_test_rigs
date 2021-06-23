@@ -9,4 +9,31 @@ Vagrant.configure('2') do |config|
                  libvirt__dhcp_enabled: false
     v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
+
+  # Buster with an encrypted volume
+  config.vm.define 'buster-cryptvolume' do |v|
+    v.vm.box = 'debian/buster64'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell', path: 'scripts/debian/buster/crypt.sh'
+    v.vm.hostname = 'buster-cryptvolume'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
+
+    # Create an additional disk to be the encrypted volume
+    v.vm.provider 'virtualbox' do |vbox|
+      disk_file = "#{v.vm.hostname}_cryptdisk.vdi"
+      unless File.exist?(disk_file)
+        vbox.customize ['createhd', '--filename', disk_file, '--size', 204800]
+      end
+      # Note we connect to port 1 as port 0 has the root disk
+      vbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller',
+                      '--port', 1, '--device', 0, '--type', 'hdd',
+                      '--medium', disk_file]
+    end
+    v.vm.provider :libvirt do |libvirt|
+      libvirt.storage :file, size: '2G'
+    end
+  end
 end
