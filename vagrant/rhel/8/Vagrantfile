@@ -1,0 +1,11 @@
+Vagrant.configure('2') do |config|
+  # Basic rhel8 box
+  config.vm.define 'rhel8' do |v|
+    v.vm.box = 'generic/rhel8'
+    v.vm.hostname = 'rhel8'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    #v.vm.synced_folder '.', '/vagrant', type: 'rsync'
+  end
+end

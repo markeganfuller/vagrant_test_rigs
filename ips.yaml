@@ -39,3 +39,5 @@ ubuntu1604: 41
 almalinux8: 42
 ubuntu2004: 43
 buster-cryptvolume: 44
+rockylinux8: 45
+rhel8: 46

@@ -1,8 +1,8 @@
 Vagrant.configure('2') do |config|
-  # Basic centos8 box
-  config.vm.define 'centos8' do |v|
-    v.vm.box = 'centos/8'
-    v.vm.hostname = 'centos8'
+  # Basic rocky linux 8 box
+  config.vm.define 'rockylinux8' do |v|
+    v.vm.box = 'rockylinux/8'
+    v.vm.hostname = 'rockylinux8'
     v.vm.provision 'shell', path: 'scripts/rhel/rhel_default.sh'
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
