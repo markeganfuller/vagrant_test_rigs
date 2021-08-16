@@ -66,4 +66,43 @@ Vagrant.configure('2') do |config|
                  libvirt__dhcp_enabled: false
     v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
+
+  # centos7 with nfs server
+  config.vm.define 'centos7-nfsserver' do |v|
+    v.vm.box = 'centos/7'
+    v.vm.provision 'shell', path: 'scripts/rhel/rhel_default.sh'
+    v.vm.provision 'shell', path: 'scripts/rhel/rhel_nfsserver.sh',
+                   args: IP_ADDRESSES['_network_']
+    v.vm.hostname = 'centos7-nfsserver'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
+    # Create an additional disk to be nfs share
+    v.vm.provider 'virtualbox' do |vbox|
+      disk_file = "#{v.vm.hostname}_nfsshare.vdi"
+      unless File.exist?(disk_file)
+        vbox.customize ['createhd', '--filename', disk_file, '--size', 204800]
+      end
+      # Note we connect to port 1 as port 0 has the root disk
+      vbox.customize ['storageattach', :id, '--storagectl', 'SATA Controller',
+                      '--port', 1, '--device', 0, '--type', 'hdd',
+                      '--medium', disk_file]
+    end
+    v.vm.provider :libvirt do |libvirt|
+      libvirt.storage :file, size: '2G'
+    end
+  end
+  # centos7 with nfs client connecting to centos7-nfsserver
+  config.vm.define 'centos7-nfsclient' do |v|
+    v.vm.box = 'centos/7'
+    v.vm.provision 'shell', path: 'scripts/rhel/rhel_default.sh'
+    v.vm.provision 'shell', path: 'scripts/rhel/rhel_nfsclient.sh',
+                   args: IP_ADDRESSES['centos7-nfsserver']
+    v.vm.hostname = 'centos7-nfsclient'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
+  end
 end

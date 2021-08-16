@@ -41,3 +41,5 @@ ubuntu2004: 43
 buster-cryptvolume: 44
 rockylinux8: 45
 rhel8: 46
+centos7-nfsserver: 47
+centos7-nfsclient: 48
