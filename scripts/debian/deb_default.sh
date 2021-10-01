@@ -16,4 +16,5 @@ EOF
 fi
 
 apt-get update
+apt-get upgrade
 apt-get install -y --no-install-recommends net-tools nmap tcpdump vim apt-transport-https ca-certificates curl gnupg2 software-properties-common tree

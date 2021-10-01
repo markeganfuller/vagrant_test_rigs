@@ -265,4 +265,36 @@ Vagrant.configure('2') do |config|
                  libvirt__dhcp_enabled: false
     v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
+  # Stretch with postgres and repmgr host one
+  config.vm.define 'stretch-psql1' do |v|
+    v.vm.box = 'debian/stretch64'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell',
+                   path: 'scripts/debian/deb_psql.sh',
+                   args: [
+                     IP_ADDRESSES['stretch-psql1'],
+                     IP_ADDRESSES['stretch-psql2']
+                   ]
+    v.vm.hostname = 'stretch-psql1'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
+  end
+  # Stretch with postgres and repmgr host one
+  config.vm.define 'stretch-psql2' do |v|
+    v.vm.box = 'debian/stretch64'
+    v.vm.provision 'shell', path: 'scripts/debian/deb_default.sh'
+    v.vm.provision 'shell',
+                   path: 'scripts/debian/deb_psql.sh',
+                   args: [
+                     IP_ADDRESSES['stretch-psql1'],
+                     IP_ADDRESSES['stretch-psql2']
+                   ]
+    v.vm.hostname = 'stretch-psql2'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
+  end
 end
