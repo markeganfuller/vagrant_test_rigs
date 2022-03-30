@@ -46,3 +46,4 @@ centos7-nfsclient: 48
 stretch-psql1: 49
 stretch-psql2: 50
 centos7-onapp: 51
+centos7-apache: 52

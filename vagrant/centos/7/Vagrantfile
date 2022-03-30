@@ -105,4 +105,15 @@ Vagrant.configure('2') do |config|
                  libvirt__dhcp_enabled: false
     v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
+  # centos7 with apache
+  config.vm.define 'centos7-apache' do |v|
+    v.vm.box = 'centos/7'
+    v.vm.provision 'shell', path: 'scripts/rhel/rhel_default.sh'
+    v.vm.provision 'shell', path: 'scripts/rhel/rhel_apache.sh'
+    v.vm.hostname = 'centos7-apache'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
+  end
 end
