@@ -1,5 +1,8 @@
 require 'yaml'
 
+DEFAULT_CPU_COUNT = 2
+DEFAULT_MEMORY_SIZE = 4096
+
 Vagrant.configure('2') do |config|
   # Handle remote libvirt hosts
   if File.file?('remote.yaml')
@@ -13,13 +16,13 @@ Vagrant.configure('2') do |config|
 
   # Default VM size settings
   config.vm.provider :libvirt do |libvirt|
-    libvirt.cpus = 2
-    libvirt.memory = 4096
+    libvirt.cpus = DEFAULT_CPU_COUNT
+    libvirt.memory = DEFAULT_MEMORY_SIZE
   end
 
   config.vm.provider :virtualbox do |vbox|
-    vbox.cpus = 2
-    vbox.memory = 1024
+    vbox.cpus = DEFAULT_CPU_COUNT
+    vbox.memory = DEFAULT_MEMORY_SIZE
   end
 end
 
