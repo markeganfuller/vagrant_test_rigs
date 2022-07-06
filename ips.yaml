@@ -47,3 +47,4 @@ stretch-psql1: 49
 stretch-psql2: 50
 centos7-onapp: 51
 centos7-apache: 52
+ubuntu1804: 53
