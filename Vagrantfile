@@ -23,6 +23,7 @@ Vagrant.configure('2') do |config|
   config.vm.provider :virtualbox do |vbox|
     vbox.cpus = DEFAULT_CPU_COUNT
     vbox.memory = DEFAULT_MEMORY_SIZE
+    vbox.customize ['modifyvm', :id, '--groups', '/vagrant_test_rigs']
   end
 end
 
