@@ -21,4 +21,20 @@ Vagrant.configure('2') do |config|
                  libvirt__dhcp_enabled: false
     v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
+  # 20.04 with haproxy test rig
+  config.vm.define 'ubuntu2004-haproxy' do |v|
+    v.vm.box = 'generic/ubuntu2004'
+    v.vm.provision 'shell', path: 'scripts/ubuntu/ubuntu_default.sh'
+    v.vm.provision 'shell', path: 'scripts/ubuntu/ubuntu_haproxy.sh'
+
+    # Vars don't work here so hardcoded
+    v.vm.post_up_message = 'HAproxy is at: http://192.168.33.59/
+HAProxy stats is at: http://192.168.33.59:8404/stats'
+
+    v.vm.hostname = 'ubuntu2004-haproxy'
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
+  end
 end
