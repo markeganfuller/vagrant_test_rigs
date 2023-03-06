@@ -13,19 +13,48 @@ defaults
   errorfile 503 /srv/503.html
 
 frontend stats
-    bind :::8404
-    stats enable
-    stats uri /stats
-    stats refresh 30s
-    stats admin if TRUE  # Force admin, don't use in production
+  bind :::8404
+  stats enable
+  stats uri /stats
+  stats refresh 30s
+  stats admin if TRUE  # Force admin, don't use in production
 
-frontend myfrontend
+frontend frontend
   bind :::80 v4v6
-  default_backend app
+  default_backend app1
+  use_backend app2 if  { path /app2 } || { path_beg /app2/ }
+  use_backend app3 if  { path /app3 } || { path_beg /app3/ }
 
-backend app
+backend app1
+  server server1 127.0.0.1:8888
+  server server2 127.0.0.1:8889
+
+# Testing rate limiting
+backend app2
+  # Entries removed after 30s of inactivity
+  # 10s is the sliding window size
+  stick-table type ipv6 size 100k expire 30s store http_req_rate(10s)
+  http-request track-sc0 src
+  # 20 is the max requests in the sliding window
+  http-request deny deny_status 429 if { sc_http_req_rate(0) gt 20 }
+
+  server server1 127.0.0.1:8888
+  server server2 127.0.0.1:8889
+
+backend app3
+  # Entries removed after 30s of inactivity
+  # 10s is the sliding window size
+  stick-table type ipv6 size 100k expire 30s store http_req_rate(10s)
+  http-request track-sc0 src
+  # 20 is the max requests in the sliding window
+  http-request deny deny_status 429 if { sc_http_req_rate(0) gt 20 }
+
+  server server1 127.0.0.1:8888
+  server server2 127.0.0.1:8889
+
 EOF
 
+# Test custom 503 page
 cat << EOF > /srv/503.html
 HTTP/1.0 503 Service Unavailable
 Cache-Control: no-cache
@@ -43,23 +72,26 @@ EOF
 
 for i in 1 2; do
     port=$((8887 + i))
-    echo "Setting up app ${i} on port ${port}"
+    echo "Setting up backend ${i} on port ${port}"
     # Python 'App' Server
-    cat << EOF > /etc/systemd/system/app${i}.service
+    cat << EOF > /etc/systemd/system/backend${i}.service
 [Unit]
 Description=Fake web app ${i}
 After=network.target
 
 [Service]
-WorkingDirectory=/srv/app${i}
+WorkingDirectory=/srv/backend${i}
 ExecStart=/usr/bin/python3 -m http.server -b 127.0.0.1 ${port}
 EOF
 
-    mkdir "/srv/app${i}"
-    echo "This is app ${i}" > "/srv/app${i}/index.html"
-    echo "server server${i} 127.0.0.1:${port}" >> /etc/haproxy/haproxy.cfg
+    mkdir -p "/srv/backend${i}/app2"
+    mkdir "/srv/backend${i}/app3"
+    echo "This is app1 on backend ${i}" > "/srv/backend${i}/index.html"
+    echo "This is app2 on backend ${i}" > "/srv/backend${i}/app2/index.html"
+    echo "This is app3 on backend ${i}" > "/srv/backend${i}/app3/index.html"
 
     systemctl daemon-reload
-    systemctl restart "app${i}"
-    systemctl restart haproxy
+    systemctl restart "backend${i}"
 done
+
+systemctl restart haproxy
