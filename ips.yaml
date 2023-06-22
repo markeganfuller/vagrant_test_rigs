@@ -53,4 +53,4 @@ kali: 55
 ubuntu1804-jenkins: 56
 ubuntu2004-apache: 57
 ubuntu2204-apache: 58
-ubuntu2004-haproxy: 59  # Hardcoded in Vagrantfile output
+ubuntu2004-haproxy: 59  # Hardcoded in Vagrantfile post_up_message
