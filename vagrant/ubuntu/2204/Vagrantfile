@@ -20,5 +20,4 @@ Vagrant.configure('2') do |config|
                  libvirt__dhcp_enabled: false
     v.vm.synced_folder '.', '/vagrant', type: 'rsync'
   end
-
 end
