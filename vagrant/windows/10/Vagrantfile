@@ -3,9 +3,48 @@ Vagrant.configure('2') do |config|
   config.vm.define 'windows10' do |v|
     v.vm.box = 'peru/windows-10-enterprise-x64-eval'
     v.vm.hostname = 'windows10'
+    v.vm.boot_timeout = 600
     v.vm.network 'private_network',
                  ip: IP_ADDRESSES[v.vm.hostname],
                  libvirt__dhcp_enabled: false
-    v.vm.synced_folder '.', '/vagrant', type: 'rsync'
+    v.winrm.transport = :plaintext
+    v.winrm.basic_auth_only = true
+
+    v.vm.provider 'virtualbox' do |vbox|
+      vbox.cpus = 2
+      vbox.memory = 2024
+    end
+
+    v.vm.provider :libvirt do |libvirt|
+      libvirt.cpus = 2
+      libvirt.memory = 2024
+    end
+  end
+
+  # windows 10 box for running tiger tool
+  config.vm.define 'windows10-tigertool' do |v|
+    v.vm.box = 'peru/windows-10-enterprise-x64-eval'
+    v.vm.hostname = 'windows10-tigertool'
+    v.vm.boot_timeout = 600
+    v.vm.network 'private_network',
+                 ip: IP_ADDRESSES[v.vm.hostname],
+                 libvirt__dhcp_enabled: false
+    v.winrm.transport = :plaintext
+    v.winrm.basic_auth_only = true
+
+    v.vm.provider :libvirt do |libvirt|
+      libvirt.cpus = 2
+      libvirt.memory = 2024
+      # Disk containing tiger tool, created with make_disk.sh
+      libvirt.storage :file,
+        name: 'tigertool',
+        path: 'tiger_tool.raw',
+        type: 'raw',
+        allow_existing: true
+      # USB ODBII Interface
+      # idVendor           0x0403 Future Technology Devices International, Ltd
+      # idProduct          0x6001 FT232 Serial (UART) IC
+      libvirt.usb vendor: '0x0403', product: '0x6001'
+    end
   end
 end

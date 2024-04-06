@@ -38,6 +38,7 @@ centos7-pyinstaller: 40
 ubuntu1604: 41
 almalinux8: 42
 ubuntu2004: 43
+<<<<<<< HEAD
 buster-cryptvolume: 44
 rockylinux8: 45
 rhel8: 46
@@ -55,3 +56,4 @@ ubuntu2004-apache: 57
 ubuntu2204-apache: 58
 ubuntu2004-haproxy: 59  # Hardcoded in Vagrantfile post_up_message
 ubuntu1604-apache: 60
+windows10-tigertool: 61
