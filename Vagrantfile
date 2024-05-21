@@ -18,6 +18,7 @@ Vagrant.configure('2') do |config|
   config.vm.provider :libvirt do |libvirt|
     libvirt.cpus = DEFAULT_CPU_COUNT
     libvirt.memory = DEFAULT_MEMORY_SIZE
+    libvirt.video_type = 'virtio'
   end
 
   config.vm.provider :virtualbox do |vbox|
